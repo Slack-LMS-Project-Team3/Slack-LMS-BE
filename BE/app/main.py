@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 # CORSMiddleware : CORS 정책 허용을 위한 미들 웨어 
-# 추가 
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

@@ -4,20 +4,14 @@ services:
     build:
       context: ./FE
       dockerfile: Dockerfile
-      # args:
-      #   NEXT_PUBLIC_API_URL: http://backend:8000
     image: 897729099078.dkr.ecr.ap-northeast-2.amazonaws.com/slam-server-front:latest
     ports:
       - "3000:3000"
     restart: always
-    # environment:
-    #   - NEXT_PUBLIC_API_URL=http://backend:8000
 
   backend:
-  #### 추가 ####
     build:
       context: ./BE
-  #### 추가 ####
     image: 897729099078.dkr.ecr.ap-northeast-2.amazonaws.com/slam-server:latest
     ports:
       - "8000:8000"

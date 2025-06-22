@@ -11,7 +11,6 @@ export default function Home() {
   
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/ping`) // Docker Compose 내부 네트워크 주소
-    // fetch(`http://43.201.21.169:8000/ping`)
       .then(res => res.json())
       .then(data => setMessage(data.message))
       .catch(err => console.error(err));
