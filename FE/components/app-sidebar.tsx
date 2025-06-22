@@ -1,4 +1,4 @@
-import { Calendar, ChevronDown, Home, Inbox, Lock, MoreHorizontal, Search, Settings } from "lucide-react"
+import { ChevronDown, Lock, MoreHorizontal } from "lucide-react"
 
 import {
   Sidebar,
@@ -10,7 +10,6 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
 } from "@/components/ui/sidebar"
 import {
   Collapsible,
