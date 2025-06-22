@@ -1,3 +1,3 @@
-// export default function ClientPage() {
-//     return ;
-//   }
+export default function ClientPage() {
+    return ;
+  }
