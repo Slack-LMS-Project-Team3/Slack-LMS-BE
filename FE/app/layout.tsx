@@ -1,4 +1,4 @@
-import { notoSansKr, lato } from './ui/fonts';  // 글꼴
+import { notoSansKr, lato } from "./ui/fonts"; // 글꼴
 import "./globals.css";
 
 export default function RootLayout({
@@ -8,11 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${notoSansKr.variable} ${lato.variable}`}
-      >
-        {children}
-      </body>
+      <body className={`${notoSansKr.variable} ${lato.variable}`}>{children}</body>
     </html>
   );
 }

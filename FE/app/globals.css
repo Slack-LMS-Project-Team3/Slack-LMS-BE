@@ -124,7 +124,7 @@
 
 /* font 관련 설정 */
 
- /* 영어만 있을 경우 Lato로 */
+/* 영어만 있을 경우 Lato로 */
 :lang(en) {
   font-family: var(--font-lato), sans-serif;
 }
@@ -137,7 +137,7 @@
 /* italic 설정 */
 .italic {
   font-style: italic;
-  display: inline-block;  /* skewX는 블록 및 인라인 블록 요소에만 작동함 */
+  display: inline-block; /* skewX는 블록 및 인라인 블록 요소에만 작동함 */
   transform: skewX(-15deg);
 }
 
@@ -193,4 +193,14 @@
  */
 .text-xxs {
   font-size: 11px;
+}
+
+/* 색 관련 설정 */
+.chat-time-stamp {
+  color: rgba(97, 96, 97, 1);
+}
+
+.chat-alarm {
+  display: inline-block;
+  background-color: #ffc6002e;
 }
