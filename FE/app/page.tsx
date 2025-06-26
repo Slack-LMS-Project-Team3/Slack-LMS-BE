@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
   const [message, setMessage] = useState("");
@@ -63,12 +63,28 @@ export function ShowDate() {
 
 // 채팅방 내 채팅
 export function ChatPage(props) {
+  const [showProfile, setShowProfile] = useState(false);
+  const hoverTimeout = useRef<NodeJS.Timeout>();
   return (
-    <div className="flex p-[8px_20px] hover:bg-[#f8f8f8]">
-      <div>
+    <div
+      className="flex p-[8px_20px] hover:bg-[#f8f8f8]"
+      onMouseEnter={() => {
+        hoverTimeout.current = setTimeout(() => setShowProfile(true), 1000);
+      }}
+      onMouseLeave={() => {
+        clearTimeout(hoverTimeout.current);
+        setShowProfile(false);
+      }}
+    >
+      <div className="relative">
         <button className="w-[36px] mr-[8px] cursor-pointer">
           <img src="./profileTest.png" className="w-[36px] h-[36px] rounded-md" />
         </button>
+        {showProfile && (
+          <div className="absolute bottom-full left-0 mb-2 z-19">
+            <MiniProfile />
+          </div>
+        )}
       </div>
       <div className="w-[100%] m-[-12px -8px -16px -16px] p-[8px 8px 8px 16px]">
         <div className="flex items-baseline space-x-1.5">
@@ -97,4 +113,32 @@ export function getCurrentTimeString() {
   const ampm = getHour < 12 ? "오전" : "오후";
 
   return `${ampm} ${hour}:${minute}`;
+}
+
+export function MiniProfile() {
+  return (
+    <div className="w-[300px] rounded-md bg-white border border-[#E2E2E2] overflow-hidden shadow-xl">
+      <div className="bg-[#F6F6F6] h-[36px] pl-[20px] flex items-center">
+        <img src="./jungler.png" className="w-[16px] h-[16px] rounded-xs mr-[6px]" />
+        <p className="text-m">JUNGLER</p>
+      </div>
+      <div className="border-t border-[#E2E2E2]" />
+
+      <div className="flex h-[110px] p-[16px]">
+        <button className="flex w-[72px] mr-[12px] cursor-pointer">
+          <img src="./profileTest.png" className="w-[72px] h-[72px] rounded-xl" />
+        </button>
+        <button className="text-m-bold cursor-pointer hover:underline">박은채(정글8기-60)</button>
+      </div>
+      <div className="border-t border-[#E2E2E2]" />
+      <div className="h-[50px] pl-[20px] pr-[20px] flex items-center">
+        <button className="cursor-pointer text-s border border-[#B6B6B7] w-[180px] h-[28px] rounded-md hover:bg-[#f8f8f8]">
+          DM 보내기
+        </button>
+        <button className="cursor-pointer text-s border border-[#B6B6B7] w-[70px] ml-[10px] h-[28px] rounded-md hover:bg-[#f8f8f8]">
+          프로필
+        </button>
+      </div>
+    </div>
+  );
 }

@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { useState } from "react";
 import { OpenProfile } from "./OpenProfile";
-
-
 
 export default function WorkspaceLayout({
   children,
@@ -52,17 +46,13 @@ export default function WorkspaceLayout({
   return (
     <div className="flex-1 flex flex-row">
       <OpenProfile isOpen={isProfileOpen} toggle={toggleProfile} />
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="h-full w-full"
-        onLayout={handleLayout}
-      >
+      <ResizablePanelGroup direction="horizontal" className="h-full w-full" onLayout={handleLayout}>
         <ResizablePanel id="sidebar" defaultSize={sidebarWidth} minSize={10} maxSize={30}>
           {/* 사이드바 영역*/}
           {sidebar}
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel id="channel" defaultSize={channelWidth} minSize={40} maxSize={90}>
+        <ResizablePanel id="channel" defaultSize={channelWidth} minSize={30} maxSize={90}>
           {/* 채널 영역*/}
           {channel}
         </ResizablePanel>
@@ -70,12 +60,7 @@ export default function WorkspaceLayout({
         {isProfileOpen && (
           <>
             <ResizableHandle />
-            <ResizablePanel
-              id="profile"
-              defaultSize={profileWidth}
-              minSize={10}
-              maxSize={30}
-            >
+            <ResizablePanel id="profile" defaultSize={profileWidth} minSize={20} maxSize={40}>
               {/* 프로필 영역 */}
               {profile}
             </ResizablePanel>
