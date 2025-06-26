@@ -175,10 +175,18 @@
 }
 
 /* 13px
- * 예) 채팅방 상단의 메시지, 캔버스 추가, 파일 & 참여인원 수, 채팅방의 날짜, 검색창의 글씨
+ * 예) 채팅방 상단의 메시지, 캔버스 추가, 파일 & 참여인원 수, 검색창의 글씨
  */
 .text-s {
   font-size: 13px;
+}
+
+/* 13px bold
+ * 예) 채팅방의 날짜
+ */
+.text-s-bold {
+  font-size: 13px;
+  font-weight: bold;
 }
 
 /* 12px
@@ -204,3 +212,15 @@
   display: inline-block;
   background-color: #ffc6002e;
 }
+
+/* 분리선 등의 회색 */
+.divider-gray {
+  color: rgba(221, 221, 221);
+}
+
+.border-divider-gray {
+  border: 1px rgba(221, 221, 221) solid;
+  background-color: white;
+}
+
+

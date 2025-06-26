@@ -21,13 +21,25 @@ export default function Home() {
     <div>
       <h1>프론트엔드</h1>
       <p>백엔드 응답: {message}</p>
-
+      <ShowDate />
       <ChatPage
         name="박은채(정글8기-60)"
         time={getCurrentTimeString()}
         message={["@here", "채팅1", "채팅2", "채팅3"]}
       />
-
+      <ChatPage
+        name="박은채(정글8기-60)"
+        time={getCurrentTimeString()}
+        message={["@here", "채팅1", "채팅2", "채팅3"]}
+      />{" "}
+      <ChatPage
+        name="박은채(정글8기-60)"
+        time={getCurrentTimeString()}
+        message={["@here", "채팅1", "채팅2", "채팅3"]}
+      />
+      <br />
+      <hr />
+      <br />
       <img></img>
       <Alert variant="default">
         <Terminal />
@@ -38,16 +50,29 @@ export default function Home() {
   );
 }
 
+export function ShowDate() {
+  return (
+    <div className="relative">
+      <hr className="absolute inset-x-0 top-1/2 border-t divider-gray" />
+      <div className="relative z-10 mx-auto w-[120px] h-[28px] border-divider-gray flex items-center justify-center rounded-full">
+        <span className="text-center text-s-bold">6월 19일 목요일</span>
+      </div>
+    </div>
+  );
+}
+
 // 채팅방 내 채팅
 export function ChatPage(props) {
   return (
-    <div className="flex p-[8px_20px]">
-      <div className="w-[36px] mr-[8px]">
-        <img src="./profileTest.png" className="w-[36px] h-[36px] rounded-md" />
+    <div className="flex p-[8px_20px] hover:bg-[#f8f8f8]">
+      <div>
+        <button className="w-[36px] mr-[8px] cursor-pointer">
+          <img src="./profileTest.png" className="w-[36px] h-[36px] rounded-md" />
+        </button>
       </div>
       <div className="w-[100%] m-[-12px -8px -16px -16px] p-[8px 8px 8px 16px]">
         <div className="flex items-baseline space-x-1.5">
-          <div className="text-m-bold">{props.name}</div>
+          <button className="text-m-bold cursor-pointer hover:underline">{props.name}</button>
           <div className="text-xs chat-time-stamp">{props.time}</div>
         </div>
         <div className="text-m">
