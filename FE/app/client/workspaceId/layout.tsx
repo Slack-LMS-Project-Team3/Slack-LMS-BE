@@ -1,13 +1,10 @@
 "use client";
 
 import React from "react";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { useState } from "react";
 import { OpenProfile } from "./OpenProfile";
+import { ProfileDrawer } from "../../../components/profile/ProfileDrawer";
 
 export default function WorkspaceLayout({
   children,
@@ -50,39 +47,7 @@ export default function WorkspaceLayout({
 
   return (
     <div className="flex-1 flex flex-row h-full w-full">
-      <OpenProfile isOpen={isProfileOpen} toggle={toggleProfile} />
-      <ResizablePanelGroup direction="horizontal" className="h-full w-full" onLayout={handleLayout}>
-        <ResizablePanel id="sidebar" defaultSize={sidebarWidth} minSize={10} maxSize={30}>
-          {/* 사이드바 영역: 너비값을 함께 전달 */}
-          {React.isValidElement(sidebar)
-            ? React.cloneElement(sidebar, { width: sidebarWidth })
-            : sidebar}
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel id="channel" defaultSize={channelWidth} minSize={30} maxSize={90}>
-          {/* 채널 영역*/}
-          {channel}
-        </ResizablePanel>
-        {/* 프로필이 열렸을 때만 렌더링 */}
-        {isProfileOpen && (
-          <>
-            <ResizableHandle />
-            <ResizablePanel
-              id="profile"
-              defaultSize={profileWidth}
-              minSize={20}
-              maxSize={40}
-              style={{ boxShadow: "-8px 0 16px rgba(0, 0, 0, 0.1)" }}
-            >
-              {/* 프로필 영역 */}
-              {/* 사이드바 영역: 너비값을 함께 전달 */}
-              {React.isValidElement(profile)
-                ? React.cloneElement(profile, { width: profileWidth })
-                : profile}
-            </ResizablePanel>
-          </>
-        )}
-      </ResizablePanelGroup>
+      <ProfileDrawer sidebar={sidebar} channel={channel} />
     </div>
   );
 }
