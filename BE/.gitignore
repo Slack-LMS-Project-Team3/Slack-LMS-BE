@@ -3,3 +3,5 @@
 .vscode*
 /app/__pycache__*
 test.db
+.env
+/app/.DS_Store
