@@ -4,6 +4,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 
+interface ChatPageProps {
+  name: string;
+  time: string;
+  message: string[];
+}
+
 export default function Home() {
   const [message, setMessage] = useState("");
   console.log(process.env.NEXT_PUBLIC_API_URL);
@@ -62,29 +68,32 @@ export function ShowDate() {
 }
 
 // 채팅방 내 채팅
-export function ChatPage(props) {
+export function ChatPage(props: ChatPageProps) {
   const [showProfile, setShowProfile] = useState(false);
-  const hoverTimeout = useRef<NodeJS.Timeout>();
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   return (
-    <div
-      className="flex p-[8px_20px] hover:bg-[#f8f8f8]"
-      onMouseEnter={() => {
-        hoverTimeout.current = setTimeout(() => setShowProfile(true), 1000);
-      }}
-      onMouseLeave={() => {
-        clearTimeout(hoverTimeout.current);
-        setShowProfile(false);
-      }}
-    >
+    <div className="flex p-[8px_20px] hover:bg-[#f8f8f8]">
       <div className="relative">
-        <button className="w-[36px] mr-[8px] cursor-pointer">
-          <img src="./profileTest.png" className="w-[36px] h-[36px] rounded-md" />
+        <button
+          className="w-[36px] mr-[8px] cursor-pointer"
+          onMouseEnter={() => {
+            hoverTimeout.current = setTimeout(() => setShowProfile(true), 800);
+          }}
+          onMouseLeave={() => {
+            if (hoverTimeout.current !== null) {
+              clearTimeout(hoverTimeout.current);
+              hoverTimeout.current = null;
+            }
+            setShowProfile(false);
+          }}
+        >
+          <img src="./profileTest.png" className="w-[36px] h-[36px] mt-1 rounded-md" />
+          {showProfile && (
+            <div className="absolute bottom-full left-0 z-19">
+              <MiniProfile />
+            </div>
+          )}
         </button>
-        {showProfile && (
-          <div className="absolute bottom-full left-0 mb-2 z-19">
-            <MiniProfile />
-          </div>
-        )}
       </div>
       <div className="w-[100%] m-[-12px -8px -16px -16px] p-[8px 8px 8px 16px]">
         <div className="flex items-baseline space-x-1.5">
@@ -117,7 +126,7 @@ export function getCurrentTimeString() {
 
 export function MiniProfile() {
   return (
-    <div className="w-[300px] rounded-md bg-white border border-[#E2E2E2] overflow-hidden shadow-xl">
+    <div className="w-[300px] rounded-md bg-white border border-[#E2E2E2] overflow-hidden mb-2 shadow-xl">
       <div className="bg-[#F6F6F6] h-[36px] pl-[20px] flex items-center">
         <img src="./jungler.png" className="w-[16px] h-[16px] rounded-xs mr-[6px]" />
         <p className="text-m">JUNGLER</p>
