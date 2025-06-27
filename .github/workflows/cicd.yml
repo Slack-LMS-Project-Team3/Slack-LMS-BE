@@ -62,6 +62,7 @@ jobs:
             --build-arg NEXT_PUBLIC_API_URL=http://${{ secrets.EC2_HOST }}:8000 \
             --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }} \
             --build-arg CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }} \
+            --build-arg CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }} \
             -t $ECR_REGISTRY/$FE_ECR_REPOSITORY:$IMAGE_TAG \
             -t $ECR_REGISTRY/$FE_ECR_REPOSITORY:latest ./FE
           docker push $ECR_REGISTRY/$FE_ECR_REPOSITORY:$IMAGE_TAG
