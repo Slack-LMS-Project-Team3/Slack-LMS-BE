@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
-from BE.app.domain.message.router import websocket_controller as message
+from BE.app.router.message import websocket_controller as message
 
 load_dotenv()
 

@@ -2,7 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi import APIRouter
 
-from BE.app.domain.message.service.websocket_manager import ConnectionManager
+from BE.app.service.message.websocket_manager import ConnectionManager
 
 router = APIRouter(prefix="/ws")
 connection = ConnectionManager()
