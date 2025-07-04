@@ -33,12 +33,16 @@ class AuthService:
         # provider_id 가 존재하지 않는 경우, 즉 처음으로 로그인 했을 때,
         # provider_id와 id 업데이트
         if not result[0][4]:
+            print("\n\n 회원의 provider_id가 없다? id 다시 세팅")
             sql = query_repo.get_sql("update_provider_id_and_id")
+            db.execute(sql, params)
+            sql = query_repo.get_sql("update_user_id_in_workspace_members")
             db.execute(sql, params)
 
         # 만약 provider_id도 존재하지만, 접근 시도하는 데이터의
         # provider_id와 다른것도 짤.
         elif result[0][4] != params["user_provider_id"]:
+            print("\n\n provider_id가 일치하지 않는다.")
             return None
         
         # 위 사항들에 해당되지 않는다면, 다시 provider_id와 email로 제대로 찾아와서 반환

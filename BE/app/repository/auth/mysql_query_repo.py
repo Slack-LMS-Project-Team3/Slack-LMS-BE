@@ -20,6 +20,11 @@ UPDATE users SET provider_id = %(user_provider_id)s,
             WHERE email = %(user_email)s;
 """
 
+update_user_id_in_workspace_members = """
+UPDATE workspace_members SET user_id = %(user_id)s
+                    WHERE email = %(user_email)s;
+"""
+
 save_refresh_token = """
 INSERT INTO refresh_tokens (id, user_id, token, updated_at, deleted_at)
                       VALUE(%(id)s, %(user_id)s, %(user_refresh_token)s, NULL, NULL);
@@ -44,3 +49,4 @@ class QueryRepo(AbstractQueryRepo):
         self.queries["save_refresh_token"] = save_refresh_token
         self.queries["find_refresh_token_by_refresh_token"] = find_refresh_token_by_refresh_token
         self.queries["remove_refresh_token_by_user_id_and_token"] = remove_refresh_token_by_user_id_and_token
+        self.queries["update_user_id_in_workspace_members"] = update_user_id_in_workspace_members

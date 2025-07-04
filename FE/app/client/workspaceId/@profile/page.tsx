@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,14 +12,13 @@ import { Input } from "@/components/ui/input";
 import { useProfileStore } from "@/store/profileStore";
 import { getProfile, patchProfile, Profile } from "@/apis/profileApi";
 import { CardFooter } from "@/components/ui/card";
+import { convertFileToBase64 } from "@/utils/fileUtils";
 
-type ProfileProps = {
-  width: number;
-  targetId?: string;
-};
+type ProfileProps = { targetId?: string };
 
-export default function ProfilePage({ width, targetId }: ProfileProps) {
-  const accessToken = localStorage.getItem("accessToken");
+export default function ProfilePage({ targetId }: ProfileProps) {
+  const accessToken = localStorage.getItem("access_token");
+  console.log(accessToken);
   if (!accessToken) throw new Error("로그인이 필요합니다.");
 
   // accessToken의 sub 클레임에 있는 userId 추출
@@ -45,19 +44,18 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
   // 프로필 저장 중 상태 관리
   const [saving, setSaving] = useState(false);
 
+  // 프로필 이미지 상태 관리
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // 프로필 조회 (페이지 렌더 후 바로 실행 (userId 변경 시 재 실행))
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        let profileData: Profile;
-        if (targetId) {
-          profileData = await getProfile(targetId);
-
-          // targetId가 없으면 본인 프로필 조회
-        } else {
-          profileData = await getProfile(userId);
-        }
+        console.log(`테스트: ${userId}`);
+        const profileData = await getProfile(targetId ?? userId);
         setProfile(profileData);
         setForm({
           nickname: profileData.nickname,
@@ -77,9 +75,17 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
   const saveChange = async () => {
     if (!profile) return;
     setSaving(true);
-    try { 
-      let updatedProfile: Profile;
-      updatedProfile = await patchProfile(userId, form);
+    try {
+      const payload: Partial<
+        Omit<
+          Profile,
+          "id" | "userId" | "email" | "workspaceId" | "role" | "groups" | "createdAt" | "updatedAt" | "deletedAt"
+        >
+      > = { ...form };
+      if (selectedFile && preview) {
+        payload.image = preview;
+      }
+      const updatedProfile = await patchProfile(profile.id, payload);
       setProfile(updatedProfile);
       close();
     } catch (error) {
@@ -90,7 +96,19 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
     }
   };
 
-  
+  // 프로필 이미지 변경
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 256 * 1024) {
+      alert("이미지 크기는 256KB 이하만 가능합니다.");
+      return;
+    }
+    setSelectedFile(file);
+    const base64 = await convertFileToBase64(file);
+    setPreview(base64);
+  };
+
   return (
     <div
       className="flex flex-col h-full w-full gap-4 overflow-auto p-4 bg-background text-foreground scrollbar-thin"
@@ -118,9 +136,8 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
       </div>
       {/* 버튼 (메시지, 편집) */}
       <div className="flex w-full min-w-0 items-center justify-center">
-        {/* DM 버튼 표시 케이스: 타인 프로필 */}
-        if (targetId){" "}
-        {
+        {/* 타인 프로필: DM 버튼 / 본인 프로필: 편집 버튼 / */}
+        {targetId ? (
           <Button
             variant="outline"
             size="sm"
@@ -129,10 +146,7 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
             <Mail size={24} />
             <span className="truncate">Direct Message</span>
           </Button>
-        }
-        {/* 편집 버튼 표시 케이스: 본인 프로필 */}
-        else{" "}
-        {
+        ) : (
           <CardModal
             trigger={
               <Button
@@ -141,22 +155,42 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
                 className="flex flex-1 min-w-0 items-center justify-start text-md font-bold"
               >
                 <SquarePen size={24} />
-                <span className="truncate">ProfileEdit</span>
+                <span className="truncate">Edit Profile</span>
               </Button>
             }
             title="Edit your profile"
           >
             {/* CardModal 내용: 프로필 편집 폼 */}
-            <form className="flex flex-col gap-5">
+            <form
+              className="flex flex-col gap-5"
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveChange();
+              }}
+            >
               <div className="flex flex-row gap-5">
                 {/* 프로필 이미지 */}
                 <div className="flex flex-col justify-between h-full w-[238px] gap-2">
                   <img
-                    src={profile?.image || "/user_default.png"}
+                    src={preview || profile?.image || "/user_default.png"}
                     alt="profile_image"
                     className="h-full aspect-square bg-gray-200 rounded-2xl overflow-hidden"
                   />
-                  <Button variant="outline" size="sm">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                  >
                     Change
                   </Button>
                 </div>
@@ -217,40 +251,48 @@ export default function ProfilePage({ width, targetId }: ProfileProps) {
                   className="w-full border rounded px-2 py-1 font-normal"
                 />
               </label>
-              <CardFooter className="flex flex-row items-center justify-end flex-none gap-4">
-                <Button variant="secondary">Cancel</Button>
-                <Button variant="default" onClick={saveChange} disabled={saving}>
+              <CardFooter className="flex justify-end p-0">
+                <Button
+                  type="submit"
+                  variant="default"
+                  disabled={saving || !form.nickname}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    saveChange();
+                  }}
+                >
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardFooter>
             </form>
           </CardModal>
-        }
+        )}
       </div>
       {/* 구분선 */}
       <Separator />
       {/* 이메일 */}
-      <div className="flex flex-col w-full min-w-0 justify-start gap-1">
+      <div className="flex flex-col min-h-[48px] w-full min-w-0 justify-start gap-1">
         <span className="flex-1 min-w-0 text-md font-bold text-gray-500 truncate">Email address*</span>
         <span className="flex-1 min-w-0 text-md truncate">{profile?.email}</span>
       </div>
       {/* 전화번호 */}
-      <div className="flex flex-col w-full min-w-0 justify-start gap-1">
+      <div className="flex flex-col min-h-[48px] w-full min-w-0 justify-start gap-1">
         <span className="flex-1 min-w-0 text-md font-bold text-gray-500 truncate">Phone</span>
         <span className="flex-1 min-w-0 text-md truncate">{profile?.phone ?? ""}</span>
       </div>
       {/* github */}
-      <div className="flex flex-col w-full min-w-0 justify-start gap-1">
+      <div className="flex flex-col min-h-[48px] w-full min-w-0 justify-start gap-1">
         <span className="flex-1 min-w-0 text-md font-bold text-gray-500 truncate">Github</span>
         <span className="flex-1 min-w-0 text-md truncate">{profile?.github ?? ""}</span>
       </div>
       {/* blog */}
-      <div className="flex flex-col w-full min-w-0 justify-start gap-1">
+      <div className="flex flex-col min-h-[48px] w-full min-w-0 justify-start gap-1">
         <span className="flex-1 min-w-0 text-md font-bold text-gray-500 truncate">Blog</span>
         <span className="flex-1 min-w-0 text-md truncate">{profile?.blog ?? ""}</span>
       </div>
       {/* 소속 그룹 */}
-      <div className="flex flex-col w-full min-w-0 justify-start gap-1">
+      <div className="flex flex-col min-h-[48px] w-full min-w-0 justify-start gap-1">
         <span className="flex-1 min-w-0 text-md font-bold text-gray-500 truncate">Groups</span>
         <div className="flex-1 min-w-0 text-md">
           <ul className="list-disc list-inside pl-1">

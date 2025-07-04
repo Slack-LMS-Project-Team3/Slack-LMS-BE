@@ -6,7 +6,7 @@ export interface Profile {
   workspaceId: number;
   nickname: string;
   email: string;
-  phone?: string | null;
+  phone?: string;
   image?: string;
   role: string;
   groups?: string[];
@@ -17,21 +17,15 @@ export interface Profile {
   deletedAt?: string | null;
 }
 
-/* Payload 전달 시 생략할 필드 */
-type EditableProfile = Omit<
-  Profile,
-  "id" | "userId" | "email" | "workspaceId" | "role" | "groups" | "createdAt" | "updatedAt" | "deletedAt"
->;
-
 /* 프로필 조회 */
-export async function getProfile(workspace_members_id: string): Promise<Profile> {
-  const accessToken = localStorage.getItem("accessToken");
+export async function getProfile(targetId: string): Promise<Profile> {
+  const accessToken = localStorage.getItem("access_token");
   if (!accessToken) throw new Error("로그인이 필요합니다.");
 
-  const res = await fetch(`${BASE}/workspace_members/${workspace_members_id}`, {
+  const res = await fetch(`${BASE}/workspace_members/${targetId}`, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       Accept: "application/json",
     },
   });
@@ -39,18 +33,19 @@ export async function getProfile(workspace_members_id: string): Promise<Profile>
     throw new Error("세션이 만료되었습니다.");
   }
   if (!res.ok) throw new Error("프로필 조회에 실패했습니다.");
+  console.log(res.json());
   return res.json();
 }
 
 /* 프로필 부분 수정 (PATCH) */
-export async function patchProfile(userId: string, payload: Partial<EditableProfile>): Promise<Profile> {
-  const accessToken = localStorage.getItem("accessToken");
+export async function patchProfile(userId: string, payload: Partial<Profile>): Promise<Profile> {
+  const accessToken = localStorage.getItem("access_token");
   if (!accessToken) throw new Error("로그인이 필요합니다.");
 
-  const res = await fetch(`${BASE}/workspace_members/{userId}`, {
+  const res = await fetch(`${BASE}/workspace_members/${userId}`, {
     method: "PATCH",
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     },

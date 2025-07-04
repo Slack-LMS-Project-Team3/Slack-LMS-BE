@@ -15,24 +15,22 @@ VALUES (
 );
 """
 
-update_workspace_member = """
-UPDATE workspace_members
-SET
-    nickname = COALESCE(%(nickname)s, nickname),
-    github  = COALESCE(%(github)s, github),
-    blog    = COALESCE(%(blog)s, blog),
-    image   = COALESCE(%(image)s, image),
-    phone   = COALESCE(%(phone)s, phone)
-WHERE id = %(id)s
-  AND deleted_at IS NULL;
-"""
+# update_workspace_member = """
+# UPDATE workspace_members
+# SET
+#     nickname = COALESCE(%(nickname)s, nickname),
+#     github  = COALESCE(%(github)s, github),
+#     blog    = COALESCE(%(blog)s, blog),
+#     image   = COALESCE(%(image)s, image)
+#   AND deleted_at IS NULL;
+# """
 
-find_member_by_id = """
-SELECT * 
-FROM workspace_members 
-WHERE id = %(id)s
-AND deleted_at IS NULL;
-"""
+# find_member_by_id = """
+# SELECT * 
+# FROM workspace_members 
+# WHERE id = %(id)s
+# AND deleted_at IS NULL;
+# """
 
 find_member_by_email = """
 SELECT *
@@ -53,8 +51,7 @@ SET
     nickname = COALESCE(%(nickname)s, nickname),
     github  = COALESCE(%(github)s, github),
     blog    = COALESCE(%(blog)s, blog),
-    image   = COALESCE(%(image)s, image),
-    phone   = COALESCE(%(phone)s, phone)
+    image   = COALESCE(%(image)s, image)
 WHERE user_id = %(user_id)s
   AND deleted_at IS NULL;
 """
