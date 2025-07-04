@@ -151,15 +151,16 @@ async def auth_callback(provider: Provider, code: str, response:Response):
             
             else:
                 # 토큰 발급
-                data = {"user_id": str(user_INdb[0][0]), "email": user_INdb[0][2]}
-                jwt_access_token = TokenSerive.create_access_token(data)
-                jwt_refresh_token = TokenSerive.create_refresh_token(data)
-                data={"id": refresh_token_uuid,
+                user_data = {"user_id": uuid.UUID(bytes=user_INdb[0][0]).hex , "email": user_INdb[0][2]}
+                jwt_access_token = TokenSerive.create_access_token(user_data)
+
+                jwt_refresh_token = TokenSerive.create_refresh_token(user_data)
+                res_data={"id": refresh_token_uuid,
                       "user_id": user_INdb[0][0], 
                       "user_refresh_token": jwt_refresh_token, 
                       }
                 
-                TokenSerive.save_refresh_token_to_db(data)
+                TokenSerive.save_refresh_token_to_db(res_data)
 
                 response.set_cookie(
                     key="refresh_token",
@@ -172,8 +173,7 @@ async def auth_callback(provider: Provider, code: str, response:Response):
 
                 result = AccessToken_and_WorkspaceID(access_token=jwt_access_token, workspace_id=user_INdb[0][5])
                 
-                return result
-    # github 구현 부분. 미완.
+                return result    # github 구현 부분. 미완.
 
     # elif provider.value == "github":
     #     async with httpx.AsyncClient() as client:

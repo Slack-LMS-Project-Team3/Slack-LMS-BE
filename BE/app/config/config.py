@@ -23,5 +23,12 @@ class Settings(BaseSettings):
     DB_NAME: str
     RDB_URL: str = f""
     NOSQL_URL: str = f""
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_REDIRECT_URI: str
+    GITHUBS_CLIENT_ID: str
+    GITHUBS_CLIENT_SECRET: str
+    GITHUBS_REDIRECT_URI: str
 
 settings = Settings()
+

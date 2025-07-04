@@ -3,6 +3,18 @@
     "prettier": "^3.6.1"
   },
   "dependencies": {
+<<<<<<< HEAD
+    "@tiptap/core": "^2.23.1",
+    "@tiptap/extension-link": "^2.23.1",
+    "@tiptap/extension-placeholder": "^2.23.1",
+    "@tiptap/extension-underline": "^2.23.1",
+    "@tiptap/react": "^2.23.1",
+    "@tiptap/starter-kit": "^2.23.1",
+    "lucide-react": "^0.525.0",
+    "tailwind": "^4.0.0",
+    "zustand": "^5.0.6",
+=======
+>>>>>>> 20884946d6aeb1153f26862c914a8b6d559d5d6c
     "framer-motion": "^12.20.2"
   }
 }

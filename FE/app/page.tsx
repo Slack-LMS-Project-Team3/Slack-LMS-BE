@@ -48,7 +48,7 @@ const Stars: React.FC<{ count?: number }> = ({ count = 100 }) => {
 };
 
 export default function Page() {
-  const router = useRouter();
+  const router = useRouter(); 
 
   useEffect(() => {
     const getToken = async () => {

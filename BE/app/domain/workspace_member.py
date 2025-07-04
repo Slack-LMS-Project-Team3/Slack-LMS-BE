@@ -6,7 +6,7 @@ import uuid
 
 @dataclass
 class WorkspaceMember:
-    user_id: UUID
+    user_id: uuid.UUID
     workspace_id: int
     id: uuid.UUID = field(default_factory=uuid.uuid4)
     nickname: str = ""

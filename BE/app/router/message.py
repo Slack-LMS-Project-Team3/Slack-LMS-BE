@@ -17,6 +17,7 @@ message_service = MessageService()
 workspace_member_service = WorkspaceMemberService()
 
 
+
 html = """
 <!DOCTYPE html>
 <html>
